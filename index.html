@@ -11,7 +11,26 @@
 
     <script>
 
-        
+        function computerPlay() {
+            // Generate a random integer from 0 - 2 
+            // 0: rock, 1: paper, 2: scissors
+            // Use conditionals to return the correct computer choice
+            let choiceNum = Math.floor(Math.random() * 3);
+            let computerPick;
+            switch(choiceNum) {
+                case 0:
+                    computerPick = "Rock";
+                    break;
+                case 1:
+                    computerPick = "Paper";
+                    break;
+                default:
+                    computerPick = "Scissors"
+            }
+
+            return computerPick;
+        }
+
     </script>
 
 </body>
