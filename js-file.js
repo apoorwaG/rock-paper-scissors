@@ -18,56 +18,73 @@ function computerPlay() {
     return computerPick;
 }
 
-function playRound(playerSelection, computerSelection) {
-    // given plaer selection and computer selection, determine who wins
-    // first, convert playerSelection string to lower case for easy comparison
-    playerSelection = playerSelection.toLowerCase();
+function displayResults(result) {
+    const resultPara = document.querySelector(".roundResult");
+    resultPara.textContent = result;
 
-    console.log(`My choice: ${playerSelection}`);
+    let playerScore = document.querySelector(".playerScore");
+    let computerScore = document.querySelector(".computerScore");
+}
+
+function playRound(event) {
+    // given plaer selection and computer selection, determine who wins
+
+
+    // first get the text content from the button, and convert to lower case
+    const playerSelection = event.target.textContent.toLowerCase();
+    // then, get the computer's pick
+    const computerSelection = computerPlay();
+
+
+    console.log(`\nMy choice: ${playerSelection}`);
     console.log(`Computer's choice: ${computerSelection}`);
 
     // now for each player choice available, specify the outcome of the clash with computer
 
+    let roundResult = "";
+
     if(playerSelection === computerSelection){
         console.log("It's a tie!");
-        return "tie";
+        roundResult = "tie";
     }
 
     if(playerSelection === "rock"){
         if(computerSelection === "scissors") {
             console.log("You win! Rock beats scissors.");
-            return "User";
+            roundResult = "User";
         }
         else if(computerSelection === "paper"){
             console.log("You lose! Paper beats rock.");
-            return "Computer"
+            roundResult = "Computer"
         }
     }
     else if(playerSelection === "paper"){
         if(computerSelection === "rock"){
             console.log("You win! Paper beats Rock.");
-            return "User";
+            roundResult = "User";
         }
         else if(computerSelection === "scissors"){
             console.log("You lose! Scissors beat paper.");
-            return "Computer";
+            roundResult = "Computer";
         }
     }
     else if(playerSelection === "scissors"){
         if(computerSelection === "paper"){
             console.log("You win! Scissors beat paper.");
-            return "User";
+            roundResult = "User";
         }
         else if(computerSelection === "rock"){
             console.log("You lose! Rock beats scissors.");
-            return "Computer"
+            roundResult = "Computer"
         }
     }
     // invalid user input!
     else {
         console.log("Invalid choice! Choose rock, paper, or scissors!");
-        return "invalid";
+        roundResult = "invalid";
     }
+
+    displayResults(roundResult);
 }
 
 function getWinner(userTally, computerTally){
@@ -100,3 +117,15 @@ function game(){
     // use the getWinner function to compare tallies and output the winner (if one exists).
     console.log(getWinner(userTally, computerTally));
 }
+
+function getPlayerChoice(event) {
+    console.log(event.target);
+    alert(`Hello! Thanks for choosing ${event.target.textContent}`);
+}
+
+const buttons = document.querySelectorAll(".choice");
+buttons.forEach((button) => {
+
+    button.addEventListener('click', playRound);
+
+});
