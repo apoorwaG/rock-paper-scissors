@@ -100,5 +100,3 @@ function game(){
     // use the getWinner function to compare tallies and output the winner (if one exists).
     console.log(getWinner(userTally, computerTally));
 }
-
-game();
