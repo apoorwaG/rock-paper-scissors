@@ -18,12 +18,67 @@ function computerPlay() {
     return computerPick;
 }
 
+function updateRound(){
+    const roundNum = document.querySelector('.roundNum');
+    let roundNumInt = +roundNum.textContent + 1;
+
+    // there have been 5 games. display the result:
+    if(roundNumInt > 5) {
+        const resultsSection = document.querySelector(".results");
+        let playerScore = +document.querySelector('.playerScore').textContent;
+        const computerScore = +document.querySelector(".computerScore").textContent;
+
+        const para = document.createElement('p');
+        if(playerScore === computerScore) {
+            para.textContent = "It's a draw!"
+        }
+        else if(playerScore > computerScore) {
+            para.textContent = "Player wins the game! Great Job!";
+        }
+        else {
+            para.textContent = "Computer wins the game! Better luck next time!";
+        }
+
+        para.setAttribute('style', 'font-size: 30px');
+        resultsSection.appendChild(para);
+
+        // disable buttons as the game is over.
+        choiceButtons = document.querySelectorAll("button");
+        choiceButtons.forEach((button) => {
+            button.disabled = true;
+        });
+        
+    }
+    else {
+        roundNum.textContent = roundNumInt;
+    }
+    
+}
+
+
 function displayResults(result) {
     const resultPara = document.querySelector(".roundResult");
-    resultPara.textContent = result;
+    
 
-    let playerScore = document.querySelector(".playerScore");
-    let computerScore = document.querySelector(".computerScore");
+    const playerScore = document.querySelector(".playerScore");
+    const computerScore = document.querySelector(".computerScore");
+    // in case of a tie, don't update just the text
+    if(result === 'tie') resultPara.textContent = "Tied this round.";
+
+    // if user wins the round, update results: scoreboard and text
+    else if(result === 'User'){
+        resultPara.textContent = "User wins this round.";
+        playerScore.textContent = Number(playerScore.textContent) + 1;
+    }
+
+    // if computer wins the round, update results: scoreboard and text
+    else {
+        resultPara.textContent = "Computer wins this round.";
+        computerScore.textContent = Number(computerScore.textContent) + 1;
+    }
+
+    // update the round number and possibly display the winner if there have been 5 rounds
+    updateRound();
 }
 
 function playRound(event) {
@@ -85,42 +140,6 @@ function playRound(event) {
     }
 
     displayResults(roundResult);
-}
-
-function getWinner(userTally, computerTally){
-    if(userTally > computerTally){
-        return "You win the game! Congrats!";
-    } else if(userTally < computerTally){
-        return "You lost the game! Computer wins";
-    } else {
-        return "It's a draw. What a game!";
-    }
-}
-
-function game(){
-    // tally for number of wins
-    let userTally = 0;
-    let computerTally = 0;
-    for(let i = 0; i < 5; i++){
-        let myChoice = prompt("What is your pick?");
-        let winner = playRound(myChoice, computerPlay());
-        // if user wins, increase user tally
-        // else, increase computer tally
-        if(winner === "User"){
-            userTally++;
-        } else if (winner === "Computer"){
-            computerTally++;
-        }
-        console.log("\n");
-    }
-    
-    // use the getWinner function to compare tallies and output the winner (if one exists).
-    console.log(getWinner(userTally, computerTally));
-}
-
-function getPlayerChoice(event) {
-    console.log(event.target);
-    alert(`Hello! Thanks for choosing ${event.target.textContent}`);
 }
 
 const buttons = document.querySelectorAll(".choice");
