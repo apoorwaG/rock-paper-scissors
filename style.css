@@ -1,0 +1,20 @@
+
+.container {
+    display: flex;
+    height: 300px;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .rock,
+.container .paper,
+.container .scissors {
+
+    border: 3px solid black;
+    border-radius: 3px;
+    margin: 20px;
+    padding: 20px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+}
