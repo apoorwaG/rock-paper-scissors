@@ -18,21 +18,65 @@ function computerPlay() {
     return computerPick;
 }
 
-function updateRound(){
+
+function disalbeButtons() {
+    // disable buttons as the game is over.
+    choiceButtons = document.querySelectorAll("button");
+    choiceButtons.forEach((button) => {
+        button.disabled = true;
+    });
+}
+
+function addResetButton() {
+    // add a reset game button with an event listener to reset game state
+    const resultsSection = document.querySelector('.results');
+    const resetButton = document.createElement("button");
+    resetButton.textContent = "Reset";
+    resetButton.setAttribute('style', 'border: 3px solid black; border-radius: 2px; justify-content: center;');
+    resetButton.classList.add('reset');
+    resetButton.addEventListener('click', resetGame);
+    resultsSection.appendChild(resetButton);
+}
+
+function resetGame() {
+
+    // reset the round number
+    const roundInfo = document.querySelector('.roundNum');
+    roundInfo.textContent = 1;
+
+    // reset the scores
+    const playerScore = document.querySelector('.playerScore');
+    playerScore.textContent = 0;
+    const computerScore = document.querySelector(".computerScore");
+    computerScore.textContent = 0;
+
+
+    // remove the round winner info, game winner info, and the reset button
+    const resultsSection = document.querySelector('.results');
+    resultsSection.removeChild(document.querySelector('p.roundResult'));
+    resultsSection.removeChild(document.querySelector('p.gameWinner'));
+    resultsSection.removeChild(document.querySelector('button.reset'));
+
+    choiceButtons = document.querySelectorAll("button");
+        choiceButtons.forEach((button) => {
+            button.disabled = false;
+        });
+
+}
+
+// function updates the round number and displays winner
+function getWinner(){
     const roundNum = document.querySelector('.roundNum');
     let roundNumInt = +roundNum.textContent + 1;
 
-    // there have been 5 games. display the result:
-    if(roundNumInt > 5) {
+    const playerScore = +document.querySelector('.playerScore').textContent;
+    const computerScore = +document.querySelector(".computerScore").textContent;
+    
+    if(playerScore === 5 || computerScore === 5){
         const resultsSection = document.querySelector(".results");
-        let playerScore = +document.querySelector('.playerScore').textContent;
-        const computerScore = +document.querySelector(".computerScore").textContent;
-
         const para = document.createElement('p');
-        if(playerScore === computerScore) {
-            para.textContent = "It's a draw!"
-        }
-        else if(playerScore > computerScore) {
+        para.classList.add('gameWinner');
+        if(playerScore === 5){
             para.textContent = "Player wins the game! Great Job!";
         }
         else {
@@ -42,23 +86,32 @@ function updateRound(){
         para.setAttribute('style', 'font-size: 30px');
         resultsSection.appendChild(para);
 
-        // disable buttons as the game is over.
-        choiceButtons = document.querySelectorAll("button");
-        choiceButtons.forEach((button) => {
-            button.disabled = true;
-        });
-        
-    }
-    else {
-        roundNum.textContent = roundNumInt;
-    }
+        // game is over. disable buttons/choice buttons
+        disalbeButtons();
+
+        // add a reset game button with an event listener:
+        addResetButton();
+
+    } 
+
+    roundNum.textContent = roundNumInt;
     
 }
 
 
 function displayResults(result) {
-    const resultPara = document.querySelector(".roundResult");
-    
+    // results node. needed to add a the score node in case it doesn't exist
+    const results = document.querySelector(".results");
+
+    let resultPara = document.querySelector(".roundResult");
+
+    // variable false initially. assume roundResult node exists
+    let newPara = false;
+    if(!resultPara){
+        newPara = true;
+        resultPara = document.createElement('p');
+        resultPara.classList.add('roundResult');
+    }
 
     const playerScore = document.querySelector(".playerScore");
     const computerScore = document.querySelector(".computerScore");
@@ -67,7 +120,7 @@ function displayResults(result) {
 
     // if user wins the round, update results: scoreboard and text
     else if(result === 'User'){
-        resultPara.textContent = "User wins this round.";
+        resultPara.textContent = "Player wins this round.";
         playerScore.textContent = Number(playerScore.textContent) + 1;
     }
 
@@ -77,8 +130,11 @@ function displayResults(result) {
         computerScore.textContent = Number(computerScore.textContent) + 1;
     }
 
-    // update the round number and possibly display the winner if there have been 5 rounds
-    updateRound();
+    // if roundResult doesn't exist, we add it as a child to the results parent node
+    if(newPara) results.appendChild(resultPara);
+
+    // update the round number and possibly display the winner (first to reach 5 wins)
+    getWinner();
 }
 
 function playRound(event) {
